@@ -1,0 +1,195 @@
+# Data Handling
+import pandas as pd
+import numpy as np
+
+# Data Preprocessing
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+
+# ML Model
+from sklearn.ensemble import RandomForestClassifier
+
+# Evaluation
+from sklearn.metrics import classification_report, accuracy_score
+# Visualization (Optional)
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+# Read the dataset
+df = pd.read_csv('social_media_emotions.csv', sep=';')
+# Display first few rows
+df.head()
+
+# Shape of the dataset
+print("Shape:", df.shape)
+# Column names
+print("Columns:", df.columns.tolist())
+# Data types and non-null values
+df.info()
+# Summary statistics for numeric features
+df.describe()
+# Check for missing values
+print(df.isnull().sum())
+# Check for duplicates
+print("Duplicate rows:", df.duplicated().sum())
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Read the dataset (make sure the correct file path is used)
+df = pd.read_csv('social_media_emotions.csv', sep=';')
+
+# Check if 'polarity' column exists, if not, create a dummy column for demonstration
+if 'polarity' not in df.columns:
+    print("Warning: 'polarity' column not found. Creating a dummy column for demonstration.")
+    df['polarity'] = np.random.rand(len(df))  # Replace with your desired logic to create 'polarity'
+
+# Histogram: Distribution of sentiment polarity (replaces G3)
+sns.histplot(df['polarity'], kde=True, bins=30, color='skyblue')
+plt.title('Distribution of Sentiment Polarity')
+plt.xlabel('Sentiment Polarity')
+plt.ylabel('Frequency')
+plt.show()
+
+# Check if 'text' column exists before creating 'text_length'
+if 'text' in df.columns:
+    # Create a new column: length of text (optional but useful)
+    df['text_length'] = df['text'].apply(lambda x: len(str(x)))
+
+    # Boxplot: Emotion category vs text length (replaces studytime vs G3)
+    sns.boxplot(x='emotion', y='text_length', data=df, palette='Set3')
+    plt.title('Text Length vs Emotion Category')
+    plt.xlabel('Emotion')
+    plt.ylabel('Length of Text')
+    plt.xticks(rotation=45)
+    plt.show()
+else:
+    print("Warning: 'text' column not found. Skipping text length analysis.")
+import pandas as pd
+# Assuming your CSV file is named 'social_media_emotions.csv'
+df = pd.read_csv('social_media_emotions.csv', sep=';')
+
+# Define target and features
+target = 'emotion'
+# Check if target column exists before dropping
+if target in df.columns:
+    features = df.columns.drop(target)
+    print("Target:", target)
+    print("Features:", features.tolist())
+else:
+    print(f"Error: Target column '{target}' not found in DataFrame.")
+# STEP 1: Install necessary libraries
+!pip install scikit-learn textblob
+
+# STEP 2: Imports
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, accuracy_score
+
+# STEP 3: Load your dataset
+df = pd.read_csv('social_media_emotions.csv')
+
+# STEP 4: Set target and features
+target = 'emotion'
+features = df.columns.drop(['id', 'username', target])  # Drop unnecessary columns
+
+print("Target:", target)
+print("Features:", features)
+
+# STEP 5: Extract text and labels
+X = df['text']  # feature (social media text)
+y = df['emotion']  # target label
+
+# STEP 6: Convert text to numeric features
+vectorizer = TfidfVectorizer(stop_words='english', max_features=5000)
+X_vec = vectorizer.fit_transform(X)
+
+# STEP 7: Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_vec, y, test_size=0.2, random_state=42)
+
+# STEP 8: Train Logistic Regression
+model = LogisticRegression(max_iter=1000)
+model.fit(X_train, y_train)
+
+# STEP 9: Evaluate model
+y_pred = model.predict(X_test)
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+# Identify categorical columns (excluding free-form text)
+categorical_cols = df.select_dtypes(include=['object']).columns
+
+# Remove 'text' from categorical (because it's NLP input, not a category)
+categorical_cols = categorical_cols.drop('text')
+
+print("Categorical Columns:", categorical_cols.tolist())
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# Feature and target
+X = df['text']                  # social media messages (text)
+y = df['emotion']               # target labels
+
+# Convert text to TF-IDF features
+vectorizer = TfidfVectorizer(stop_words='english', max_features=5000)
+X_tfidf = vectorizer.fit_transform(X)
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, accuracy_score
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+X = df['text']
+y = df['emotion']
+
+vectorizer = TfidfVectorizer(stop_words='english', max_features=5000)
+X_tfidf = vectorizer.fit_transform(X)
+
+X_train, X_test, y_train, y_test = train_test_split(X_tfidf, y, test_size=0.2, random_state=42)
+
+model = LogisticRegression(max_iter=1000)
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+from sklearn.linear_model import LogisticRegression
+
+# Train model
+model = LogisticRegression(max_iter=1000)
+model.fit(X_train, y_train)
+
+# Predict
+y_pred = model.predict(X_test)
+from sklearn.metrics import accuracy_score, classification_report
+
+# Evaluate
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+# ✅ Sample new social media message input
+new_message = ["I feel so lonely even in a crowd."]
+
+# Convert message to TF-IDF features
+new_message_vector = vectorizer.transform(new_message)
+
+# Predict the emotion
+predicted_emotion = model.predict(new_message_vector)
+
+print("Predicted Emotion:", predicted_emotion[0])
+import gradio as gr
+
+# Gradio function for predicting emotion
+def predict_emotion(text):
+    vector = vectorizer.transform([text])
+    prediction = model.predict(vector)
+    return f"🧠 Predicted Emotion: {prediction[0]}"
+
+# Gradio interface
+interface = gr.Interface(
+    fn=predict_emotion,
+    inputs=gr.Textbox(lines=4, placeholder="Enter a social media post here..."),
+    outputs="text",
+    title="Emotion Detector from Social Media Text",
+    description="Enter a social media message and this app will detect the emotion."
+)
+
+interface.launch()
